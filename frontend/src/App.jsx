@@ -9,7 +9,6 @@ const App = ({ children }) => {
         <nav>
           <Link to="/">Departments</Link>
           <Link to="/employees">Employees</Link>
-          <Link to="/periods">Periods</Link>
           <Link to="/kpis">KPIs</Link>
           <Link to="/kpi-entry">KPI Entry</Link>
         </nav>
