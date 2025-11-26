@@ -25,7 +25,7 @@ def list_periods(db: Session = Depends(get_db)):
 
 @router.get("/{period_id}", response_model=schemas.Period)
 def get_period(period_id: int, db: Session = Depends(get_db)):
-    period = db.query(models.Period).get(period_id)
+    period = db.get(models.Period, period_id)
     if not period:
         raise HTTPException(status_code=404, detail="Period not found")
     return period
@@ -33,7 +33,7 @@ def get_period(period_id: int, db: Session = Depends(get_db)):
 
 @router.put("/{period_id}", response_model=schemas.Period)
 def update_period(period_id: int, period: schemas.PeriodUpdate, db: Session = Depends(get_db)):
-    db_period = db.query(models.Period).get(period_id)
+    db_period = db.get(models.Period, period_id)
     if not db_period:
         raise HTTPException(status_code=404, detail="Period not found")
     for key, value in period.model_dump().items():
@@ -45,7 +45,7 @@ def update_period(period_id: int, period: schemas.PeriodUpdate, db: Session = De
 
 @router.delete("/{period_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_period(period_id: int, db: Session = Depends(get_db)):
-    db_period = db.query(models.Period).get(period_id)
+    db_period = db.get(models.Period, period_id)
     if not db_period:
         raise HTTPException(status_code=404, detail="Period not found")
     db.delete(db_period)

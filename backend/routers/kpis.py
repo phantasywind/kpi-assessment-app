@@ -25,7 +25,7 @@ def list_kpis(db: Session = Depends(get_db)):
 
 @router.get("/{kpi_id}", response_model=schemas.Kpi)
 def get_kpi(kpi_id: int, db: Session = Depends(get_db)):
-    kpi = db.query(models.Kpi).get(kpi_id)
+    kpi = db.get(models.Kpi, kpi_id)
     if not kpi:
         raise HTTPException(status_code=404, detail="KPI not found")
     return kpi
@@ -33,7 +33,7 @@ def get_kpi(kpi_id: int, db: Session = Depends(get_db)):
 
 @router.put("/{kpi_id}", response_model=schemas.Kpi)
 def update_kpi(kpi_id: int, kpi: schemas.KpiUpdate, db: Session = Depends(get_db)):
-    db_kpi = db.query(models.Kpi).get(kpi_id)
+    db_kpi = db.get(models.Kpi, kpi_id)
     if not db_kpi:
         raise HTTPException(status_code=404, detail="KPI not found")
     for key, value in kpi.model_dump().items():
@@ -45,7 +45,7 @@ def update_kpi(kpi_id: int, kpi: schemas.KpiUpdate, db: Session = Depends(get_db
 
 @router.delete("/{kpi_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_kpi(kpi_id: int, db: Session = Depends(get_db)):
-    db_kpi = db.query(models.Kpi).get(kpi_id)
+    db_kpi = db.get(models.Kpi, kpi_id)
     if not db_kpi:
         raise HTTPException(status_code=404, detail="KPI not found")
     db.delete(db_kpi)

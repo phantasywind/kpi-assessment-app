@@ -34,7 +34,7 @@ def list_kpi_values(
 
 @router.put("/{value_id}", response_model=schemas.KpiValue)
 def update_kpi_value(value_id: int, payload: schemas.KpiValueUpdate, db: Session = Depends(get_db)):
-    db_value = db.query(models.KpiValue).get(value_id)
+    db_value = db.get(models.KpiValue, value_id)
     if not db_value:
         raise HTTPException(status_code=404, detail="KPI value not found")
     for key, value in payload.model_dump(exclude_unset=True).items():
@@ -46,8 +46,8 @@ def update_kpi_value(value_id: int, payload: schemas.KpiValueUpdate, db: Session
 
 @router.get("/employee/{employee_id}/period/{period_id}", response_model=schemas.KpiValueListResponse)
 def get_employee_period_values(employee_id: int, period_id: int, db: Session = Depends(get_db)):
-    employee = db.query(models.Employee).get(employee_id)
-    period = db.query(models.Period).get(period_id)
+    employee = db.get(models.Employee, employee_id)
+    period = db.get(models.Period, period_id)
     if not employee or not period:
         raise HTTPException(status_code=404, detail="Employee or period not found")
     values = (
