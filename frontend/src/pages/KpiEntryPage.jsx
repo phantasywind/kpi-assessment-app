@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import api from '../apiClient'
 
 const KpiEntryPage = () => {
@@ -30,11 +30,6 @@ const KpiEntryPage = () => {
     loadReferences()
   }, [])
 
-  const kpiById = useMemo(
-    () => Object.fromEntries(kpis.map((kpi) => [kpi.id, kpi])),
-    [kpis]
-  )
-
   const loadValues = async (employeeId, periodId) => {
     if (!employeeId || !periodId) return
     try {
@@ -44,16 +39,6 @@ const KpiEntryPage = () => {
       setSummary(summaryRes.data.weighted_score)
     } catch (err) {
       console.error('Failed to load KPI values', err)
-    }
-  }
-
-  const deleteValue = async (id) => {
-    if (!window.confirm('Delete this KPI value?')) return
-    try {
-      await api.delete(`/kpi-values/${id}`)
-      loadValues(selectedEmployee, selectedPeriod)
-    } catch (err) {
-      console.error('Delete KPI value failed', err)
     }
   }
 
@@ -154,72 +139,52 @@ const KpiEntryPage = () => {
             <button type="submit">Add</button>
           </form>
 
-          <div className="card">
-            <div>
-              <strong>Employee:</strong> {employees.find((e) => e.id === Number(selectedEmployee))?.name || 'N/A'}
+          {summary !== null && (
+            <div className="card">
+              <strong>Weighted Score: {summary ?? 'N/A'}</strong>
             </div>
-            <div>
-              <strong>Period:</strong>{' '}
-              {periods.find((p) => p.id === Number(selectedPeriod))?.label || 'N/A'}
-            </div>
-            <div>
-              <strong>Weighted Score:</strong> {summary ?? 'N/A'}
-            </div>
-          </div>
+          )}
 
-          {values.length === 0 && <div className="card">No KPI values yet for this employee/period.</div>}
-
-          {values.map((val) => {
-            const kpi = kpiById[val.kpi_id]
-            return (
-              <div key={val.id} className="card form-grid">
-                <div>
-                  <strong>{kpi?.name || `KPI ${val.kpi_id}`}</strong>
-                  {kpi?.category ? ` (${kpi.category})` : ''}
-                </div>
-                <input
-                  type="number"
-                  placeholder="Target"
-                  value={val.target_value || ''}
-                  onChange={(e) => handleFieldChange(val.id, 'target_value', Number(e.target.value))}
-                />
-                <input
-                  type="number"
-                  placeholder="Actual"
-                  value={val.actual_value || ''}
-                  onChange={(e) => handleFieldChange(val.id, 'actual_value', Number(e.target.value))}
-                />
-                <input
-                  type="number"
-                  placeholder="Weight"
-                  value={val.weight || ''}
-                  onChange={(e) => handleFieldChange(val.id, 'weight', Number(e.target.value))}
-                />
-                <input
-                  type="number"
-                  placeholder="Score"
-                  value={val.score || ''}
-                  onChange={(e) => handleFieldChange(val.id, 'score', Number(e.target.value))}
-                />
-                <textarea
-                  placeholder="Comment"
-                  value={val.comment || ''}
-                  onChange={(e) => handleFieldChange(val.id, 'comment', e.target.value)}
-                />
-                <input
-                  placeholder="Status"
-                  value={val.status || ''}
-                  onChange={(e) => handleFieldChange(val.id, 'status', e.target.value)}
-                />
-                <div className="actions">
-                  <button type="button" onClick={() => saveValue(val)}>Save</button>
-                  <button type="button" className="danger" onClick={() => deleteValue(val.id)}>
-                    Delete
-                  </button>
-                </div>
-              </div>
-            )
-          })}
+          {values.map((val) => (
+            <div key={val.id} className="card form-grid">
+              <div><strong>KPI ID:</strong> {val.kpi_id}</div>
+              <input
+                type="number"
+                placeholder="Target"
+                value={val.target_value || ''}
+                onChange={(e) => handleFieldChange(val.id, 'target_value', Number(e.target.value))}
+              />
+              <input
+                type="number"
+                placeholder="Actual"
+                value={val.actual_value || ''}
+                onChange={(e) => handleFieldChange(val.id, 'actual_value', Number(e.target.value))}
+              />
+              <input
+                type="number"
+                placeholder="Weight"
+                value={val.weight || ''}
+                onChange={(e) => handleFieldChange(val.id, 'weight', Number(e.target.value))}
+              />
+              <input
+                type="number"
+                placeholder="Score"
+                value={val.score || ''}
+                onChange={(e) => handleFieldChange(val.id, 'score', Number(e.target.value))}
+              />
+              <textarea
+                placeholder="Comment"
+                value={val.comment || ''}
+                onChange={(e) => handleFieldChange(val.id, 'comment', e.target.value)}
+              />
+              <input
+                placeholder="Status"
+                value={val.status || ''}
+                onChange={(e) => handleFieldChange(val.id, 'status', e.target.value)}
+              />
+              <button type="button" onClick={() => saveValue(val)}>Save</button>
+            </div>
+          ))}
         </>
       )}
     </div>

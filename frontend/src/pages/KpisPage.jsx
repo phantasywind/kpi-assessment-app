@@ -50,20 +50,6 @@ const KpisPage = () => {
     })
   }
 
-  const deleteKpi = async (id) => {
-    if (!window.confirm('Delete this KPI?')) return
-    try {
-      await api.delete(`/kpis/${id}`)
-      if (editingId === id) {
-        setEditingId(null)
-        setForm({ name: '', category: '', unit: '', direction: 'HigherIsBetter', default_weight: '' })
-      }
-      loadKpis()
-    } catch (err) {
-      console.error('Delete KPI failed', err)
-    }
-  }
-
   return (
     <div>
       <h2>KPIs</h2>
@@ -107,12 +93,7 @@ const KpisPage = () => {
           <div>Unit: {kpi.unit || 'N/A'}</div>
           <div>Direction: {kpi.direction}</div>
           <div>Default Weight: {kpi.default_weight ?? 'N/A'}</div>
-          <div className="actions">
-            <button onClick={() => startEdit(kpi)}>Edit</button>
-            <button className="danger" onClick={() => deleteKpi(kpi.id)}>
-              Delete
-            </button>
-          </div>
+          <button onClick={() => startEdit(kpi)}>Edit</button>
         </div>
       ))}
     </div>
