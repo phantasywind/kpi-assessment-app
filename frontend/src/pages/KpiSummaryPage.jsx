@@ -8,7 +8,6 @@ const KpiSummaryPage = () => {
   const [selectedDepartment, setSelectedDepartment] = useState('')
   const [summaries, setSummaries] = useState([])
   const [loading, setLoading] = useState(false)
-  const [hasSearched, setHasSearched] = useState(false)
 
   useEffect(() => {
     const loadLookups = async () => {
@@ -29,7 +28,6 @@ const KpiSummaryPage = () => {
 
   const loadSummary = async () => {
     if (!selectedPeriod) return
-    setHasSearched(true)
     setLoading(true)
     try {
       const params = { period_id: Number(selectedPeriod) }
@@ -52,14 +50,7 @@ const KpiSummaryPage = () => {
       <div className="card form-grid">
         <div>
           <label>Period</label>
-          <select
-            value={selectedPeriod}
-            onChange={(e) => {
-              setSelectedPeriod(e.target.value)
-              setHasSearched(false)
-            }}
-            required
-          >
+          <select value={selectedPeriod} onChange={(e) => setSelectedPeriod(e.target.value)} required>
             <option value="">Select period</option>
             {periods.map((p) => (
               <option key={p.id} value={p.id}>
@@ -70,13 +61,7 @@ const KpiSummaryPage = () => {
         </div>
         <div>
           <label>Department</label>
-          <select
-            value={selectedDepartment}
-            onChange={(e) => {
-              setSelectedDepartment(e.target.value)
-              setHasSearched(false)
-            }}
-          >
+          <select value={selectedDepartment} onChange={(e) => setSelectedDepartment(e.target.value)}>
             <option value="">All</option>
             {departments.map((d) => (
               <option key={d.id} value={d.id}>
@@ -90,9 +75,7 @@ const KpiSummaryPage = () => {
         </button>
       </div>
 
-      {!hasSearched ? (
-        <div className="card">Select filters and click Search to view KPI summaries.</div>
-      ) : summaries.length === 0 ? (
+      {summaries.length === 0 ? (
         <div className="card">No KPI summary data. Please adjust filters and search.</div>
       ) : (
         <div className="card">

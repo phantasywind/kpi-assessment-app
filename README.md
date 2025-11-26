@@ -40,5 +40,5 @@ npm run dev -- --host --port 5173
 Visit `http://localhost:5173` to access the UI. The frontend expects the backend at `http://localhost:8000` by default (configurable via `VITE_API_BASE_URL`).
 
 ## Project Status
-- Backend FastAPI app with CRUD for departments, employees, KPIs, periods, KPI values, a per-employee score summary, and a cross-employee KPI summary report. Period labels default to `YYYY-MM` when not provided. KPI value deletion is supported via the API.
-- React frontend with navigation, CRUD (create/update/delete) forms for departments/employees/KPIs/periods, a KPI entry page that reads/writes/removes KPI values via the API, and a KPI Summary page with period/department filters.
+- Backend FastAPI app with CRUD for departments, employees, KPIs, periods, KPI values, and summary endpoint.
+- React frontend with navigation, CRUD forms for departments/employees/KPIs, and a KPI entry page that reads/writes KPI values via the API.

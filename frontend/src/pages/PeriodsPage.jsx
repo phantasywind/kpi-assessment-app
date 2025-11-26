@@ -51,20 +51,6 @@ const PeriodsPage = () => {
     })
   }
 
-  const deletePeriod = async (id) => {
-    if (!window.confirm('Delete this period?')) return
-    try {
-      await api.delete(`/periods/${id}`)
-      if (editingId === id) {
-        setEditingId(null)
-        setForm(initialForm)
-      }
-      loadPeriods()
-    } catch (err) {
-      console.error('Delete period failed', err)
-    }
-  }
-
   return (
     <div>
       <h2>Periods</h2>
@@ -97,12 +83,7 @@ const PeriodsPage = () => {
           <div>
             Year: {period.year} Month: {period.month}
           </div>
-          <div className="actions">
-            <button onClick={() => startEdit(period)}>Edit</button>
-            <button className="danger" onClick={() => deletePeriod(period.id)}>
-              Delete
-            </button>
-          </div>
+          <button onClick={() => startEdit(period)}>Edit</button>
         </div>
       ))}
     </div>

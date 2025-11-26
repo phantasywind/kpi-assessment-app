@@ -50,8 +50,6 @@ def employee_summary(
     if department_id is not None:
         query = query.filter(models.Employee.department_id == department_id)
 
-    query = query.order_by(models.Employee.name)
-
     rows = query.all()
     period_label = period.label or f"{period.year:04d}-{period.month:02d}"
 

@@ -11,7 +11,7 @@ router = APIRouter(prefix="/kpi-values", tags=["KPI Values"])
 
 @router.post("/", response_model=schemas.KpiValue, status_code=status.HTTP_201_CREATED)
 def create_kpi_value(value: schemas.KpiValueCreate, db: Session = Depends(get_db)):
-    db_value = models.KpiValue(**value.model_dump())
+    db_value = models.KpiValue(**value.dict())
     db.add(db_value)
     db.commit()
     db.refresh(db_value)
@@ -34,10 +34,10 @@ def list_kpi_values(
 
 @router.put("/{value_id}", response_model=schemas.KpiValue)
 def update_kpi_value(value_id: int, payload: schemas.KpiValueUpdate, db: Session = Depends(get_db)):
-    db_value = db.get(models.KpiValue, value_id)
+    db_value = db.query(models.KpiValue).get(value_id)
     if not db_value:
         raise HTTPException(status_code=404, detail="KPI value not found")
-    for key, value in payload.model_dump(exclude_unset=True).items():
+    for key, value in payload.dict(exclude_unset=True).items():
         setattr(db_value, key, value)
     db.commit()
     db.refresh(db_value)
@@ -46,8 +46,8 @@ def update_kpi_value(value_id: int, payload: schemas.KpiValueUpdate, db: Session
 
 @router.get("/employee/{employee_id}/period/{period_id}", response_model=schemas.KpiValueListResponse)
 def get_employee_period_values(employee_id: int, period_id: int, db: Session = Depends(get_db)):
-    employee = db.get(models.Employee, employee_id)
-    period = db.get(models.Period, period_id)
+    employee = db.query(models.Employee).get(employee_id)
+    period = db.query(models.Period).get(period_id)
     if not employee or not period:
         raise HTTPException(status_code=404, detail="Employee or period not found")
     values = (
@@ -76,12 +76,3 @@ def get_score_summary(employee_id: int, period_id: int, db: Session = Depends(ge
         period_id=period_id,
         weighted_score=weighted_sum / total_weight,
     )
-
-
-@router.delete("/{value_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_kpi_value(value_id: int, db: Session = Depends(get_db)):
-    db_value = db.get(models.KpiValue, value_id)
-    if not db_value:
-        raise HTTPException(status_code=404, detail="KPI value not found")
-    db.delete(db_value)
-    db.commit()

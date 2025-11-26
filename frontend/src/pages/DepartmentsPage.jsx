@@ -48,20 +48,6 @@ const DepartmentsPage = () => {
     })
   }
 
-  const deleteDepartment = async (id) => {
-    if (!window.confirm('Delete this department?')) return
-    try {
-      await api.delete(`/departments/${id}`)
-      if (editingId === id) {
-        setEditingId(null)
-        setForm({ name: '', parent_department_id: '', is_active: true })
-      }
-      loadDepartments()
-    } catch (err) {
-      console.error('Delete department failed', err)
-    }
-  }
-
   return (
     <div>
       <h2>Departments</h2>
@@ -93,12 +79,7 @@ const DepartmentsPage = () => {
           <strong>{dept.name}</strong>
           <div>Parent ID: {dept.parent_department_id || 'N/A'}</div>
           <div>Status: {dept.is_active ? 'Active' : 'Inactive'}</div>
-          <div className="actions">
-            <button onClick={() => startEdit(dept)}>Edit</button>
-            <button className="danger" onClick={() => deleteDepartment(dept.id)}>
-              Delete
-            </button>
-          </div>
+          <button onClick={() => startEdit(dept)}>Edit</button>
         </div>
       ))}
     </div>

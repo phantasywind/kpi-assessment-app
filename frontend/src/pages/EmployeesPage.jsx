@@ -64,20 +64,6 @@ const EmployeesPage = () => {
     })
   }
 
-  const deleteEmployee = async (id) => {
-    if (!window.confirm('Delete this employee?')) return
-    try {
-      await api.delete(`/employees/${id}`)
-      if (editingId === id) {
-        setEditingId(null)
-        setForm({ name: '', department_id: '', title: '', hire_date: '', is_active: true })
-      }
-      loadEmployees(filterDept)
-    } catch (err) {
-      console.error('Delete employee failed', err)
-    }
-  }
-
   const applyFilter = (deptId) => {
     setFilterDept(deptId)
     loadEmployees(deptId)
@@ -146,12 +132,7 @@ const EmployeesPage = () => {
           <div>Department: {emp.department_id || 'None'}</div>
           <div>Hire Date: {emp.hire_date || 'N/A'}</div>
           <div>Status: {emp.is_active ? 'Active' : 'Inactive'}</div>
-          <div className="actions">
-            <button onClick={() => startEdit(emp)}>Edit</button>
-            <button className="danger" onClick={() => deleteEmployee(emp.id)}>
-              Delete
-            </button>
-          </div>
+          <button onClick={() => startEdit(emp)}>Edit</button>
         </div>
       ))}
     </div>
