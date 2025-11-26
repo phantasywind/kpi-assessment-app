@@ -1,7 +1,7 @@
 from datetime import date
 from typing import List, Optional
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel
 
 from .models import DirectionEnum
 
@@ -23,7 +23,8 @@ class DepartmentUpdate(DepartmentBase):
 class Department(DepartmentBase):
     id: int
 
-    model_config = ConfigDict(from_attributes=True)
+    class Config:
+        orm_mode = True
 
 
 class EmployeeBase(BaseModel):
@@ -45,7 +46,8 @@ class EmployeeUpdate(EmployeeBase):
 class Employee(EmployeeBase):
     id: int
 
-    model_config = ConfigDict(from_attributes=True)
+    class Config:
+        orm_mode = True
 
 
 class KpiBase(BaseModel):
@@ -67,7 +69,8 @@ class KpiUpdate(KpiBase):
 class Kpi(KpiBase):
     id: int
 
-    model_config = ConfigDict(from_attributes=True)
+    class Config:
+        orm_mode = True
 
 
 class PeriodBase(BaseModel):
@@ -87,7 +90,8 @@ class PeriodUpdate(PeriodBase):
 class Period(PeriodBase):
     id: int
 
-    model_config = ConfigDict(from_attributes=True)
+    class Config:
+        orm_mode = True
 
 
 class KpiValueBase(BaseModel):
@@ -118,7 +122,8 @@ class KpiValueUpdate(BaseModel):
 class KpiValue(KpiValueBase):
     id: int
 
-    model_config = ConfigDict(from_attributes=True)
+    class Config:
+        orm_mode = True
 
 
 class KpiValueListResponse(BaseModel):
