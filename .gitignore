@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.venv
+.env.local
+.python-version
+.DS_Store
+/node_modules
+/frontend/node_modules
+backend/kpi.db
